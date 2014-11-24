@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # 99aeabc9ec7fe80b1b39f5e53dc7e49e      <- self-modifying Perl magic
-# state:  TJFoGi6u3igaB4QnsjUAmI5ajBBto/c2e74M0TaQ0W4
+# state:  WYVKjxgyDiLQWhUf84r015jX5rpPnr36W0txnhREyIo
 # istate: KLAtwC38rX1voAyfi/vG2ambKyzSDDaTNvVSlH0gIF0
 # id:     UCdVwr+1QqTcieO7/hgq5d0RK7S9wX4N9biQ/ecDzZo
 
@@ -1990,8 +1990,536 @@ meta::section('business-protocol', <<'__');
 
 __
 meta::section('coding-interview', <<'__');
-- s1 Collaborative coding interview | sec:coding-interview
-  
+- s1 Coding interview | sec:coding-interview
+  People tend to assume there are two outcomes for a coding interview:~succeed
+  or fail. This is not technically true, however; a third outcome is {\em
+  succeed specatularly}, which is what you should do if you have the option,
+  and here's why.
+
+  Coding challenge interviewers are usually engineers, and engineers tend to
+  like to have answers to questions so they can move on. Because of this,
+  they'll try to jump to a conclusion about you as soon as they have enough
+  signal to justify it. This conclusion is rarely final, but at least they have
+  something to work with if they don't observe anything else.
+
+  The interview question will usually fall into one of two categories, each
+  equally expedient. One is stuff like FizzBuzz, which rapidly detects certain
+  failure modes. The other is something open-ended that gives you some room to
+  be creative. Although these problems can detect failure, they're more often
+  about detecting excellence.
+
+  If at any point in the interview process someone decides you're excellent,
+  you have a much higher chance of getting an offer. Picasso was excellent and
+  his paintings are now worth millions, whereas the guy who paints imitation
+  art just like Picasso is broke. Setting a new bar instantly promotes you into
+  the class of people who can't be replaced, and this makes it much easier to
+  justify further investment in interviewing you.
+
+  - s2 Coding challenge etiquette
+    Enjoy the coding challenge. Relish it. This is an opportunity to be asked
+    difficult, interesting questions that are designed to be solvable in less
+    than an hour. It's break from all the mundane aspects of writing production
+    code, and an opportunity to prove to yourself as well as your interviewer
+    that you can solve anything that comes your way.
+
+    - itemize << end
+      - item Have a language you're really comfortable with. Java is not a bad
+        choice for this because it's straightforward and everyone knows it.
+
+      - item Unless the problem is trivial, verbally sketch out your thought
+        process. Argue against the approaches you've taken to see if they hold
+        up. Don't write any code until you know what you're doing. The goal of
+        all this is to demonstrate that your thought process is effective at
+        solving problems. Silence followed by perfection also works, but is
+        riskier.
+
+      - item Make simplifying assumptions as necessary, but be prepared to undo
+        them later. Always mention when you're doing this.
+
+      - item If the problem is unsolvable as stated, change it minimally to
+        make it solvable and explain why you need to do this.
+
+      - item If the problem is too vague or ill-specified to even work with,
+        talk with the interviewer to work the problem into something you can
+        solve. Everyone loses if you walk away from the interview without
+        having done anything.
+
+      - item When writing code, use idioms that reflect a considered
+        perspective. It should be simple, easy to maintain, well-suited to the
+        problem, and generally self-documenting. You should be able to
+        intelligently discuss every aspect of your coding style.
+
+      - item Never sweat the small stuff. Nobody cares if you know what the
+        deletion method is called on Java's {\tt HashSet} class. Just casually
+        mention that you'd look it up.
+
+      - item Never get defensive. If you've made a mistake, fix it quickly (or
+        think about it and discuss it) and move on. Any good interviewer will
+        understand that people make mistakes, and some will even set up
+        questions specifically designed to mislead you. This is all part of the
+        interview and it's to see how you take it when things go wrong.
+    - end
+
+  - s2 Quick-fail problems
+    These are the easiest problems you'll get, so you need to make them look
+    easy. Some classic examples:
+
+    - enumerate << end
+      - item Write the factorial function.
+      - item Write FizzBuzz.
+      - item Calculate the sum of numbers in a linked list.
+      - item Print the last line of a file (naive solution).
+    - end
+
+    Coding style matters, as well as speed and whether you can write them
+    without any bugs. I'll go through some solutions of varying quality.
+
+    - s3 FizzBuzz
+      Bad solutions indicate a deep lack of understanding of some sort. Any
+      competent interviewer will count a solution like this against you:
+
+      - java examples/fizzbuzz-bad.java << end
+        pulic int fizz_buzz() {         // "pulic" -- eh; "int" ... ????
+        int count = 0;                  // count of what?; also, indent!
+        while (true) {                  // forever? why?
+        int count2 = count              // "count2"?
+        while (count2 > 0) {            // modulus! modulus!
+        count2 = count2 - 3;
+        }
+        int count3 = count;             // ok, this is just silly
+        while (count3 > 0) {
+        count3 = count3 - 5;
+        }
+        //check for divisibility
+        if (count2 == 0) {
+        if (count3 == 0) {
+        System.out.println("fizzbuzz");
+        }
+        else                            // missing open brace, not good
+        System.out.println("fizz");
+        }
+        else
+        if count3 == 0 {
+        System.out.println("buzz")
+        }
+        else {
+        System.out.println(count)
+        }
+        }
+        }
+      - end
+
+      This, on the other hand, is a solution I would consider to be nearly
+      perfect:
+
+      - java examples/fizzbuzz-good.java << end
+        for (int i = 1; i < 100; ++i) {
+          final boolean by3 = i % 3 == 0;
+          final boolean by5 = i % 5 == 0;
+          if (by3 && by5)
+            println("fizzbuzz");
+          else if (by5)
+            println("buzz");
+          else if (by3)
+            println("fizz");
+          else
+            println(i);
+        }
+      - end
+
+      Some important differences:
+
+      - itemize << end
+        - item Indentation and good style should be habit for you. Code should
+          have meaning, not just behavior.
+
+        - item Know the nuances and idioms of your language. Java gives you a
+          modulus operator, so you should use it here. Use the appropriate
+          iteration and decisional constructs.
+
+        - item Draw attention to stuff that matters. Here, most of the space is
+          taken up by the condition structure, which is parameterized by two
+          variables calculated above. The {\tt for} loop is appropriately
+          minimal.
+
+        - item Write the solution to resemble the problem. Here, {\tt by3} and
+          {\tt by5} are the two conditions we care about. This makes the {\tt
+          if} stack nearly a verbatim translation of the problem statement.
+          Because of this, it's very easy to look at the code and be confident
+          it does the right thing.
+
+        - item Write hints into your code (as appropriate). I like to use {\tt
+          final} to indicate invariance, for example. This is a matter of
+          opinion, but anything you can do to make it clear that you're
+          thinking about maintainability will work in your favor.
+      - end
+
+    - s3 Sum of linked list
+      This problem is nice because it has a mediocre solution:
+
+      - java examples/sumlist-mediocre.java << end
+        interface OurList {
+          int head();
+          OurList tail();
+        }
+        int sum(OurList list) {
+          if (list == null)
+            return 0;
+          else
+            return list.head() + sum(list.tail());
+        }
+      - end
+
+      This is logically correct, terse, and generally well-expressed. But it
+      has two big problems. First, it returns an {\tt int} rather than a {\tt
+      long} or {\tt double}; this is probably a mistake. Second, and more
+      importantly, it requires linear stack space and may cause an overflow.
+      Java does not optimize tail calls, but even if it did the recursive call
+      here is not in tail position. A much better solution uses iteration:
+
+      - java examples/sumlist-good.java << end
+        interface OurList {
+          int head();
+          OurList tail();
+        }
+        long sum(OurList xs) {
+          long total = 0;
+          for (; xs != null; xs = xs.tail())
+            total += xs.head();
+          return total;
+        }
+      - end
+
+      Not only is this more reliable, but it's also quite a bit faster and
+      follows normal Java idioms more closely. It also creates some
+      opportunities to talk about some edge cases. For example, what if the
+      list is dynamically generated and very long? The iterative solution is
+      ideal here because it loses references to cells it's already processed,
+      which allows them to be garbage collected. This means we can
+      theoretically process lists of arbitrary length using constant space.
+
+      I also prefer the parameter name {\tt xs} to a word like {\tt list}. {\tt
+      xs}, which is prounced, ``exes,'' seems simpler to me than {\tt list}
+      does because it refers to a series of things called {\tt x}, and {\tt x}
+      is the most generic name for a data value. It also takes up less space,
+      which makes it easier to focus on the algorithm structure.
+
+      The {\tt for} loop is a little nonstandard, but the idiom is preserved
+      from Java's usual numeric iteration. This means that although someone
+      unaccustomed to this type of loop might be confused at first, the usual
+      intuition about {\tt for} loops would all apply:~we're moving forward
+      through a list until we hit the end, the termination check is the second
+      thing, and the increment is the third.
+
+  - s2 Algorithm problems
+    These usually have a known-best solution, but it's ok not to find it. You
+    should of course try, and brush up on all of the usual algorithm and data
+    structure stuff before a coding interview in case you get a problem like
+    this. Below I go through some example problems. It's been long enough since
+    I've seen these that I don't remember the solution.
+
+    By the way, you'll notice the almost complete absence of comments from my
+    example code. Most interview problems are simple enough that comments are
+    unnecessary. When you're practicing questions like this, write your code
+    without comments or blank lines and see how readable you can make it. It's
+    ok if you later decide to use comments, but most really good code won't
+    require them.
+
+    - s3 Maximum subarray
+      - quote << end
+        \em
+        Given a list of integers, find the offset and length of the subarray
+        with the largest sum.
+      - end
+
+      - s4 Initial train of thought
+        It isn't immediately obvious how to do this, so start by talking
+        through a few strategies. One option is to calculate the sum of every
+        subarray and find the maximum of those, but it seems slow. These
+        subarrays are always made from adjacent elements, though, so maybe we
+        can ask something like, ``should I expand out by one.'' In fact, since
+        we're just summing stuff, we can expand out anytime we have something
+        nonnegative and we'll get a larger, or at least not smaller, sum.
+
+        If I were to start coding now (which would be a mistake), here's what I
+        would write:
+
+        - java examples/max-subarray1.java << end
+          // return [offset, length]
+          int[] subarray(final int[] xs) {
+            int nextUntried  = 1;
+            int maxSum       = 0;
+            int maxSumStart  = -1;
+            int maxSumLength = 0;
+            for (int i = 1; i < xs.length; i = nextUntried) {
+              maxSumStart  = -1;
+              maxSumLength = 1;
+              while (i + maxSumStart >= 0 && xs[i + maxSumStart] >= 0) {
+                --maxSumStart;
+                ++maxSumLength;
+              }
+              i += maxSumStart;
+              while (i + maxSumLength < xs.length
+                     && xs[i + maxSumLength] >= 0)
+                ++maxSumLength;
+              nextUntried = i + maxSumLength + 1;
+            }
+            return new int[] {maxSumStart, maxSumLength};
+          }
+        - end
+
+        The code is a little awkward, but it isn't terrible. The problem is
+        with my thinking:~it's obvious I don't really understand something
+        important about the problem. The right move is to continue thinking
+        about it.
+
+      - s4 First course correction
+        Ok, so what happens when we're expanding and hit a negative number? I
+        guess we need to look on the other side to see if there's an even
+        larger positive number. That's kind of gross, and bumps us back into
+        quadratic time; so let's think about it differently. Suppose we first
+        take a running sum of the array; then what are we looking for? Oh!
+        We're just finding the max and min of that. The numbers in between
+        those extremes collectively have the largest sum.
+
+        Writing code here is a much less serious mistake, but is still
+        suboptimal. Here's what I'd say, most likely:
+
+        - java examples/max-subarray2.java << end
+          int[] subarray(int[] xs) {
+            // modify xs in place (!)
+            for (int i = 0, total = 0; i < xs.length; ++i)
+              xs[i] = total += xs[i];
+
+            int max = 0;
+            int min = 0;
+            for (int i = 1; i < xs.length; ++i) {
+              if (xs[i] > xs[max]) max = i;
+              if (xs[i] < xs[min]) min = i;
+            }
+            return new int[] {Math.min(min, max),
+                              Math.max(min, max) - Math.min(min, max)};
+          }
+        - end
+
+        This is much better, but it's wrong and still suboptimal. Let's
+        continue thinking:
+
+      - s4 Second course correction
+        Ok, so how do we do this in code? We could start by summing the array
+        in a loop, then check for max and min. Oh, but what if min happens
+        after max? I guess we really need the largest min/max gap where the max
+        is after the min.
+
+        Do we actually need to sum the array in a loop? We never look backwards
+        at stuff we've summed, so really we just need to go through and
+        maintain a running total. This is an optimal solution, so coding now
+        makes sense:
+
+        - java examples/max-subarray3.java << end
+          int[] subarray(final int[] xs) {
+            if (xs.length == 0)
+              return null;
+            int max      = 0;
+            int min      = 0;
+            int maxValue = xs[0];
+            int minValue = xs[0];
+            for (int i = 1, sum = xs[0]; i < xs.length; ++i) {
+              sum += xs[i];
+              if (sum < minValue) {
+                minValue = maxValue = sum;
+                min      = max      = i;
+              }
+              if (sum > maxValue) {
+                maxValue = sum;
+                max      = i;
+              }
+            }
+            return new int[] {min, max - min};
+          }
+        - end
+
+        This solution feels a little more complicated than the last one, but
+        it's conceptually more straightforward (since we're not modifying
+        anything) and better-engineered. Just the fact that we're solving it in
+        constant space is a consideration that a good interviewer would
+        appreciate.
+
+    - s3 Parse simple math
+      - quote << end
+        \em
+        Write a function that takes a string containing a simple expression and
+        returns the result. The expression will contain single-digit numbers,
+        {\tt +}, and {\tt *}, and should respect precedence.
+      - end
+
+      Ok, this is obviously a shunting-yard style problem. We could parse it
+      recursive-descent, but that's overkill. All operators are
+      left-associative, so we can evaluate as we go. Actually, we can just have
+      two constant levels:~the number on the left of a {\tt +} and the current
+      product. So our solution is constant-space.
+
+      - java examples/parse-math.java << end
+        double parsemath(final String expr) {
+          double left  = 0;
+          double right = 1;
+          for (int i = 0; i < expr.length(); ++i) {
+            final char c = expr.charAt(i);
+            switch (c) {
+              case '+':
+                left += right;
+                right = 1;
+                break;
+              case '*':
+                break;
+              default:
+                right *= c - '0';
+                break;
+            }
+          }
+          return left + right;
+        }
+      - end
+
+      I had some doubts about 2/3 of the way through this. I wasn't sure it
+      would be ok to add {\tt right} to {\tt left} at the end, since it might
+      contain a stray {\tt 1} from either initialization or the {\tt +} case.
+      But after some thought I realized it would be ok since we always end
+      after seeing a digit. That digit changes the 1 into something meaningful.
+
+      In hindsight, my variable names could be better. {\tt left} and {\tt
+      right} are less descriptive than {\tt sum} and {\tt product}. Also, the
+      first time through I had forgotten parens after {\tt expr.length}. This
+      isn't terrible, but it isn't great either. In my case I was confusing
+      Java and Javascript, but an interviewer might assume I was bad at Java
+      and confusing strings and arrays.
+
+      One nice part of this solution is \verb|c - '0'|. Using the equivalent
+      \verb|c - 0x30| or \verb|c - 48| would be hostile to someone reading your
+      code, whereas \verb|c - '0'| gives someone just enough hints that it's
+      clear you're not up to anything too complicated.
+
+      Doing things like character-to-number conversion this way tells the
+      interviewer you know how characters work and have at least some knowledge
+      of ASCII. It's also reminiscent of C-style code, which will usually work
+      in your favor in today's hiring culture of very high-level languages and
+      app development (it shows perspective, assuming you can also do the
+      high-level stuff).
+
+    - s3 Sorted word index
+      - quote << end
+        \em
+        Build the index for a book, sorted by word. Your input is a list of
+        $\langle \textrm{word}, \textrm{page} \rangle$ tuples, and the list may
+        contain duplicates.
+      - end
+
+      We'll need some data structures for this. I'll go ahead and write this up
+      the wrong way to illustrate some common mistakes:
+
+      - java examples/sorted-index-bad.java << end
+        List index(List tuples) {
+          HashMap resultIndex = new HashMap();
+          for (int i = 0; i < tuples.size(); ++i) {
+            if (!resultIndex.contains(tuples[i].word))
+              resultIndex.add(tuples[i].word, new LinkedList());
+            resultIndex.get(tuples[i].word).add(tuples[i].page);
+          }
+          List sortedResult = new ArrayList();
+          Iterator iterator = resultIndex.iterator();
+          while (iterator.hasNext()) {
+            Tuple indexEntry = iterator.next();
+            sortedResult.add(indexEntry);
+          }
+          quicksort(sortedResult);
+          return sortedResult;
+        }
+      - end
+
+      This solution has a lot of problems. For one thing, none of the data
+      structures are parameterized. {\em Always parameterize your data
+      structures.} There are two reasons you want to do this. First, prior to
+      Java 1.5 (a long time ago), Java didn't even have generics. You might
+      come across as a Luddite who prefers inferior technologies.
+
+      But more importantly, writing this stuff down tells the interviewer what
+      you're thinking. A map of \verb|<Thing, Thing>| doesn't convey your
+      intentions very well; its meaning is then defined by what you do to the
+      map instead of something intrinsic to it.\footnote{Generics aren't
+      intrinsic really, but you get the idea.} Whenever possible, use code to
+      document what you're doing. Especially parameters and return types,
+      because this gives the interviewer a quick way to correct any
+      inappropriate assumptions you might be making.
+
+      Here are some other problems with the code above:
+
+      - enumerate << end
+        - item It mixes definition types between interfaces (e.g.~{\tt List})
+          and implementations (e.g.~{\tt HashMap}). There are very occasionally
+          reasons to do this, but this isn't one of them.
+        - item It grossly mishandles {\tt tuples}. Were {\tt tuples} a linked
+          list, the function would be quadratic.
+        - item {\tt resultIndex} is redundant, misleading, and too long. It
+          takes up a huge amount of space inside the {\tt for} loop.
+        - item {\tt tuples[i].word} is repeated three times in quick
+          succession. Stash this into a short variable.
+        - item {\tt sortedResult} is too long.
+        - item {\tt iterator} is redundant and too long. The ideal name is
+          {\tt it}.
+        - item The {\tt while} loop spends a whole line defining a variable
+          that's almost as long as the expression it replaces.
+        - item {\tt quicksort()} is not only dangerous performance-wise, but
+          also not a valid Java function. No Java library function would be
+          called this way because Java requires that it be a method call
+          (unless you {\tt import static}, but your interviewer might not
+          assume you meant that).
+      - end
+
+      The code also has some technical issues that I don't think are important
+      for an interview:
+
+      - enumerate << end
+        - item {\tt Map}s don't support {\tt .add}; the correct method is {\tt
+          .put}. Nobody cares. The compiler would catch this immediately. If
+          the interviewer makes a big deal about this, find a company with
+          better priorities or more competent interviewers.
+
+        - item {\tt tuples[i]} doesn't work. This is fine; you clearly want to
+          get-by-position. The only thing the interviewer should care about
+          here is that this retrieval is linear-time for a {\tt LinkedList},
+          and you should know this cold and have a very good excuse for doing
+          it this way.
+
+        - item {\tt .size()} could be expensive, but isn't. Your interviewer
+          may not have read the source for {\tt LinkedList}, but there's a
+          counter in there that makes {\tt .size()} a constant-time operation.
+          It's cool if you can work this into an interview, but odds are that
+          if you're counting a linked list you're already doing something
+          wrong.
+      - end
+
+      Here's the right way, with some notational liberties that are appropriate
+      during an interview:
+
+      - java examples/sorted-index-good.java << end
+        SortedMap<String, List<Integer>> index(final List<Tuple> tuples) {
+          final SortedMap<...> result = new TreeMap<>();
+          for (final Tuple t : tuples) {
+            if (result.containsKey(t.word))
+              result.get(t.word).add(t.page);
+            else
+              result.put(t.word, new ArrayList<Integer>(t.page));
+          }
+          return result;
+        }
+      - end
+
+      \verb|SortedMap<...>| isn't allowed, but it's really obvious what I mean,
+      especially if I explain it as I'm typing. The same thing is true of
+      \verb|new ArrayList<Integer>(t.page)|, which actually is valid Java but
+      doesn't mean what I want it to (in real life it sets the initial capacity
+      of the list). In an interview I would either make a point of mentioning
+      this redefinition, or would just write out the right code.
 
 __
 meta::section('main', <<'__');
@@ -2014,11 +2542,7 @@ meta::section('main', <<'__');
   more standard startup jobs.
 
   {\bf Everything in this guide is my own opinion.} It does not reflect the
-  views of any of my employers, past or present. It also doesn't always reflect
-  my own views of what is ideal or ethical, just what the situational economics
-  dictate. I assume you have a strong system of ethics and understand the
-  implications of the Nuremberg trials. (If you don't, then stop reading now
-  and fix it.)
+  views of any of my employers, past or present.
 
   - include section::business-protocol
   - include section::the-interviewer
@@ -2110,15 +2634,24 @@ meta::section('technical-phone-interview', <<'__');
     - itemize << end
       - item Write the FizzBuzz function.
       - item Reverse an array in place.
+      - item Reverse a linked list in linear time.
       - item What is the insertion time for a binary tree?
       - item What is the insertion time for a hashtable (worst, average)?
+      - item How is a priority queue implemented?
+      - item Quicksort vs mergesort, pros/cons?
+      - item What does $O(n^2)$ mean formally?
+      - item What does ``atomic'' mean?
       - item What is memoization?
+      - item Why do floating-point computations often use an epsilon?
+      - item How are negative integers represented?
       - item Write the Fibonacci function without using recursion.
       - item What's the difference between the stack and the heap?
       - item Conceptually, what does a garbage collector do?
       - item Conceptually, how does virtual memory work?
       - item What happens under the hood when you go to {\tt google.com}?
       - item Why should you profile before optimizing?
+      - item What is an example use case for a cache?
+      - item How would you do [some simple task] in a UNIX shell?
     - end
 
   - s2 Development literacy
