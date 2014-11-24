@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # 99aeabc9ec7fe80b1b39f5e53dc7e49e      <- self-modifying Perl magic
-# state:  WYVKjxgyDiLQWhUf84r015jX5rpPnr36W0txnhREyIo
+# state:  q/zkBvC6jmhYq1clsMiVLgpcMxiuixHaoAoumfBo4EE
 # istate: KLAtwC38rX1voAyfi/vG2ambKyzSDDaTNvVSlH0gIF0
 # id:     UCdVwr+1QqTcieO7/hgq5d0RK7S9wX4N9biQ/ecDzZo
 
@@ -2081,7 +2081,7 @@ meta::section('coding-interview', <<'__');
       - java examples/fizzbuzz-bad.java << end
         pulic int fizz_buzz() {         // "pulic" -- eh; "int" ... ????
         int count = 0;                  // count of what?; also, indent!
-        while (true) {                  // forever? why?
+        while(true) {                   // forever? why?
         int count2 = count              // "count2"?
         while (count2 > 0) {            // modulus! modulus!
         count2 = count2 - 3;
@@ -2091,12 +2091,12 @@ meta::section('coding-interview', <<'__');
         count3 = count3 - 5;
         }
         //check for divisibility
-        if (count2 == 0) {
-        if (count3 == 0) {
+        if (count2 == 0){
+        if ( count3 == 0) {
         System.out.println("fizzbuzz");
         }
         else                            // missing open brace, not good
-        System.out.println("fizz");
+        System.out.println ("fizz");
         }
         else
         if count3 == 0 {
@@ -2131,7 +2131,10 @@ meta::section('coding-interview', <<'__');
 
       - itemize << end
         - item Indentation and good style should be habit for you. Code should
-          have meaning, not just behavior.
+          have meaning, not just behavior. Formatting should be absolutely
+          consistent (any random-looking inconsistency such as in the bad
+          solution above will lead your interviewer to suspect you might be
+          junior at writing code, and you really want to avoid this).
 
         - item Know the nuances and idioms of your language. Java gives you a
           modulus operator, so you should use it here. Use the appropriate
@@ -2140,16 +2143,19 @@ meta::section('coding-interview', <<'__');
         - item Draw attention to stuff that matters. Here, most of the space is
           taken up by the condition structure, which is parameterized by two
           variables calculated above. The {\tt for} loop is appropriately
-          minimal.
+          minimal because it's a standard iteration form that uses a generic
+          variable name.
 
         - item Write the solution to resemble the problem. Here, {\tt by3} and
           {\tt by5} are the two conditions we care about. This makes the {\tt
           if} stack nearly a verbatim translation of the problem statement.
           Because of this, it's very easy to look at the code and be confident
-          it does the right thing.
+          it does the right thing. These variables are short, descriptive, and
+          not generic, which causes them to draw attention without taking up
+          much space.
 
-        - item Write hints into your code (as appropriate). I like to use {\tt
-          final} to indicate invariance, for example. This is a matter of
+        - item Write hints into your code (as appropriate). I like to use
+          {\tt final} to indicate invariance, for example. This is a matter of
           opinion, but anything you can do to make it clear that you're
           thinking about maintainability will work in your favor.
       - end
@@ -2210,6 +2216,21 @@ meta::section('coding-interview', <<'__');
       intuition about {\tt for} loops would all apply:~we're moving forward
       through a list until we hit the end, the termination check is the second
       thing, and the increment is the third.
+
+    - s3 Practice problems
+      Solutions to these are at \ref{sec:practice-problem-solutions}.
+
+      - enumerate << end
+        - item $f(s) = \textrm{true}$ if $s$ is a palindrome. Optimal solution
+          is constant space, linear time, 6 lines total. Should take under a
+          minute.
+        - item $f(xs) = \textrm{true}$ if $xs$ contains a geometric series.
+          Solution is constant space, linear time, 15 lines of code. Should
+          take less than 5 minutes.
+        - item Write a function that counts the words in a string without
+          allocating memory. Solution is linear time, 14 lines of code, and
+          should take less than 5 minutes.
+      - end
 
   - s2 Algorithm problems
     These usually have a known-best solution, but it's ok not to find it. You
@@ -2520,6 +2541,151 @@ meta::section('coding-interview', <<'__');
       doesn't mean what I want it to (in real life it sets the initial capacity
       of the list). In an interview I would either make a point of mentioning
       this redefinition, or would just write out the right code.
+
+      It's worth mentioning that I'm being a little more pedantic than
+      necessary about a few things. In particular, an interviewer is unlikely
+      to care much whether you use {\tt containsKey} vs {\tt contains} and
+      stuff like that. Knowing these details adds a bit to your credibility,
+      and it's something I try to do, but it won't ever be the difference
+      between passing and failing an interview.
+
+  - s2 High-level design questions
+    These are usually problems for which you don't write code, but instead just
+    describe how you would design a solution. Failure and success are more
+    nebulous here, but generally there are two ways to fail one of these
+    questions:
+
+    - enumerate << end
+      - item The problem has a well-known solution and you completely miss it.
+      - item You fail to convince the interviewer that you could actually solve
+        the problem given enough time.
+    - end
+
+    An example of the first failure mode would be something like, ``design a
+    data structure that lets me get the minimum and maximum elements in $O(log
+    n)$ time'' and you don't think of either a sorted list or a binary tree.
+    You might be able to recover if you invent either one, but it's better (and
+    far more reassuring to the interviewer) if you just know how they work.
+
+    The second failure mode happens either when you're completely out of your
+    depth, or when you don't adopt the ``give up or die trying'' mentality
+    thoroughly enough. If you're good at interviewing, neither should happen to
+    you, and here's why. Being out of your depth isn't a dealbreaker if you're
+    sufficiently resourceful and/or curious. If you don't have a clue, start
+    asking definitional questions until the problem makes a little more sense.
+    For example:
+
+    - quote << end
+      \em
+      How many bits of entropy are in each word in English?
+
+      ``Can I ask a question?'' \\
+      ``Sure, go for it.'' \\
+      ``What is entropy?'' \\
+      ``Entropy is information content, measured as Shannon Entropy.'' \\
+      ``Do you mind if I look this up on Wikipedia?''
+    - end
+
+    You'll probably get mixed responses to the Wikipedia question. But it's a
+    good question to ask because it shows that you know how to teach yourself
+    to solve problems you can't yet work with. If the interviewer says yes you
+    should be all set, but let's suppose they say no:
+
+    - quote << end
+      \em
+      ``Nope, you've got to solve this problem with no external resources.'' \\
+      ``Ok, I think I can solve this problem but not with just what I know. Can
+        you relate entropy to other units of measure?'' \\
+      ``I guess you can think of entropy as the log of probability.'' \\
+      ``Aha, so we're looking at words in terms of their probability
+        distribution.'' \\
+      ``That's right.'' \\
+      ``Ok, so I guess more common words are less informative because they
+        appear more often. Does this mean they have lower entropy?''
+    - end
+
+    This is naive and misguided question, but it forces the interviewer to
+    either fix your thinking or be pathologically unhelpful. This is exactly
+    the situation you want to create when you're operating at a disadvantage.
+    Here's one way the conversation can proceed:
+
+    - quote << end
+      \em
+      ``Well, a word by itself doesn't have entropy; it's a property of the
+        probability distribution.'' \\
+      ``Interesting, so we don't know the information content of a single
+        word.'' \\
+      ``That's right, because you need to consider its context to know how
+        common it is.'' \\
+      ``Ok, so entropy must have something to do with how the probabilities
+        themselves are distributed.''
+    - end
+
+    And so on. When the interviewer is your only source of information, it's
+    critical to keep the conversation going and maintain enough curiosity to
+    find your way around the problem space. Interviews are conversations as
+    much as they are anything else, and how you think is as important as the
+    knowledge you bring to the table.
+
+    It's worth noting that in order for this to work, you need to have a fairly
+    broad base of knowledge to tie things to. The interviewer has neither the
+    time nor inclination to teach you computer science or math from the ground
+    up, so you have to be making some intelligent connections for them to be
+    remotely confident that you'll work out.
+
+  - s2 Practice problem solutions
+    - enumerate << end
+      - item Return true if palindrome.
+
+        - java solutions/palindrome.java << end
+          boolean palindrome(final String s) {
+            for (int i = 0, j = s.length - 1; i < j; ++i, --j)
+              if (s.charAt(i) != s.charAt(j))
+                return false;
+            return true;
+          }
+        - end
+
+      - item Return true if geometric series.
+
+        - java solutions/geometric.java << end
+          boolean geometric(final double[] xs) {
+            if (xs.length < 2)
+              return true;
+            if (xs[0] == 0) {
+              for (int i = 0; i < xs.length; ++i)
+                if (xs[i] != 0)
+                  return false;
+              return true;
+            }
+
+            final double ratio = xs[1] / xs[0];
+            for (int i = 2; i < xs.length; ++i)
+              if (Math.abs(xs[i] / xs[i - 1] - ratio) > EPSILON)
+                return false;
+            return true;
+          }
+        - end
+
+      - item Return the word count of a string without allocating memory.
+
+        - java solutions/wordcount.java << end
+          int wordcount(final String s) {
+            boolean inWord = false;
+            int     words  = 0;
+            for (int i = 0; i < s.length; ++i) {
+              final char c = s.charAt(i);
+              if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {
+                if (!inWord)
+                  ++words;
+                inWord = true;
+              } else
+                inWord = false;
+            }
+            return words;
+          }
+        - end
+    - end
 
 __
 meta::section('main', <<'__');
