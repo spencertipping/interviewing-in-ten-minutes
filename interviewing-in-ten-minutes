@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # 99aeabc9ec7fe80b1b39f5e53dc7e49e      <- self-modifying Perl magic
-# state:  q/zkBvC6jmhYq1clsMiVLgpcMxiuixHaoAoumfBo4EE
+# state:  qQA1P8WKUGwkyDUiaYe3PAyi1oBoc1ZkkAt2mDQPve0
 # istate: KLAtwC38rX1voAyfi/vG2ambKyzSDDaTNvVSlH0gIF0
 # id:     UCdVwr+1QqTcieO7/hgq5d0RK7S9wX4N9biQ/ecDzZo
 
@@ -329,10 +329,11 @@ meta::meta('type::vim_highlighter', <<'__');
 meta::configure 'vim_highlighter', extension => '.vim', inherit => 1;
 meta::define_form 'vim_highlighter', \&meta::bootstrap::implementation;
 __
+meta::alias('eM', 'edit section::main');
 meta::alias('eb', 'edit section::business-protocol');
 meta::alias('ec', 'edit section::coding-interview');
 meta::alias('ei', 'edit section::the-interviewer');
-meta::alias('em', 'edit section::main');
+meta::alias('em', 'edit section::meeting-in-person');
 meta::alias('er', 'edit section::resume');
 meta::alias('eti', 'edit section::the-interviewer');
 meta::alias('etp', 'edit section::technical-phone-interview');
@@ -2633,13 +2634,115 @@ meta::section('coding-interview', <<'__');
     up, so you have to be making some intelligent connections for them to be
     remotely confident that you'll work out.
 
-  - s2 Practice problem solutions
+    - s3 IO scheduler
+      - quote << end
+        \em
+        You're writing an operating system and inventing your own IO scheduling
+        strategy. How would you design it?
+      - end
+
+      This is a really open-ended question, but you'll get those sometimes.
+      Here's how a good interview might go:
+
+      - quote << end
+        \em
+        ``Ok, so we're scheduling programs' requests to make IO?'' \\
+        ``That's right.'' \\
+        ``Ok. These programs can read and write, and let's treat each request
+          as having an offset and length from the device.'' \\
+        ``Yep, you can assume that.'' \\
+        ``I guess each program should have its own IO priority. So stuff like
+          databases can get first access when it needs to.'' \\
+        ``Can you see anything that might go wrong if you do it this way?'' \\
+        ``Well, theoretically we might swap to disk, and that's probably being
+          scheduled too. But then, maybe we just say that it's inadvisable to
+          deprioritize the swapper.'' \\
+        ``Fair enough.'' \\
+        ``Ok, so every process is going through the same scheduler. I guess the
+          question now is what to do at any given moment. Let's keep a priority
+          queue of requests.'' \\
+        ``How do you sort the queue?'' \\
+        ``Program priority.... oh, and we also need to prevent starvation I
+          guess. There's probably a standard way of dealing with this.'' \\
+        ``There is, but suppose you're inventing it from scratch.'' \\
+        ``Ok, well one way to do it is to keep track of the request times. As
+          requests get older, they get bumped up the queue even if they're
+          technically lower priority.'' \\
+        ``That sounds reasonable. What would that sorting function look like?''
+        \\
+        ``I guess it would be something like $priority + k(delay)$?'' \\
+        ``How might that function not do what you want?'' \\
+        ``I'm not sure. I guess if $k$ is really small it would still allow
+          starvation. But older requests will still outweigh new ones
+          eventually.'' \\
+        ``Stepping back, what are some other considerations you might want to
+          make in your scheduler?'' \\
+        ``Let's see...~we're handling priority correctly, so I'm not sure.''
+        ``Ok, here's a hint. Suppose you've got two programs running at the
+          same priority. One of them is writing 10GB in 4MB chunks, and the
+          other one is writing all over the place in tiny 4KB chunks. What's
+          going to happen here?'' \\
+        ``Oh, that's awful. The random writer is going to introduce all kinds
+          of seek delays into the sequential one. I should have thought of
+          that.'' \\
+        ``Yep, exactly. What do you think is ideal behavior in this scenario?''
+        \\
+        ``I'm not quite sure. Intuitively it seems like we should let the
+          sequential one run uninterrupted for a while, but then what if you
+          have two such processes? At that point you're balancing sequential
+          access against delays.'' \\
+        ``Right, it's a tradeoff between latency and throughput. Is that a
+          problem?'' \\
+        ``I guess it isn't; that could be a system-wide preference.'' \\
+        ``Right. So any ideas about the sequential process?''
+      - end
+
+      And so forth. Even though the interviewer had to prompt and give hints,
+      it was mostly just to direct the conversation, not because the candidate
+      was messing stuff up. Some stuff the candidate did right:
+
+      - itemize << end
+        - item Scoped out the problem before trying to solve it. The problem as
+          stated actually wasn't solvable because it was underspecified, but
+          the candidate asked enough questions to get something tractable.
+
+        - item Recognized that real-world constraints applied to the problem
+          and used them (e.g.~mentioning disk swapping). Not all problems are
+          amenable to this kind of reasoning, but this one is.
+
+        - item Pointed out that the problem was most likely solved already.
+          This is a good thing to do because the interviewer might immediately
+          cut over to asking about established solutions. If you don't offer an
+          existing solution, an interviewer might suspect you reinvent the
+          wheel too eagerly.
+
+        - item Described the solution at the same level of detail as the
+          interviewer constrained the problem. The candidate didn't burst into
+          code or mention direct memory access. Either of these would be
+          addressed at a different level of problem, and the candidate's job is
+          to recognize this.
+
+        - item Remained willing to change the solution's design. Because the
+          problem isn't written down anywhere, it's going to change constantly
+          until the interview ends. It's important to treat it this way and not
+          commit to anything too low-level. You want to remain as agile as the
+          interviewer.
+      - end
+
+      I tried to write an example of a bad interview, but I couldn't figure out
+      how the conversation would actually go. A lot of times a bad interview is
+      just someone who gets very quiet, or who doesn't understand the
+      interviewer and doesn't then ask questions to fix it. A curious person
+      who's sufficiently out of the loop might still fail a question like this,
+      but odds of success go way up if you stay engaged.
+
+  - s2 Practice problem solutions | sec:practice-problem-solutions
     - enumerate << end
       - item Return true if palindrome.
 
         - java solutions/palindrome.java << end
           boolean palindrome(final String s) {
-            for (int i = 0, j = s.length - 1; i < j; ++i, --j)
+            for (int i = 0, j = s.length() - 1; i < j; ++i, --j)
               if (s.charAt(i) != s.charAt(j))
                 return false;
             return true;
@@ -2673,7 +2776,7 @@ meta::section('coding-interview', <<'__');
           int wordcount(final String s) {
             boolean inWord = false;
             int     words  = 0;
-            for (int i = 0; i < s.length; ++i) {
+            for (int i = 0; i < s.length(); ++i) {
               final char c = s.charAt(i);
               if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {
                 if (!inWord)
@@ -2731,8 +2834,9 @@ meta::section('resume', <<'__');
       positive signal that you know what you're doing. If you don't know
       \TeX{}, use HTML and export as PDF. If all else fails, write one in plain
       text and claim that minimalism is a social virtue you take seriously.
-      Don't use Word because it conveys that you have no standards. {\bf Use a
-      spellchecker.}
+      Don't use Word because it conveys that you have no standards. As a
+      colleague of mine once said, ``if I'm on the fence and the resume is a
+      word doc, I typically reject the candidate.'' {\bf Use a spellchecker.}
 
     - item Keep your resume down to one page. This shows that you respect their
       time. {\bf Use a spellchecker.}
@@ -2857,8 +2961,10 @@ meta::section('the-interviewer', <<'__');
   at each stage:~screening a resume requires minutes, a phone interview
   requires an hour, and an in-person interview requires several people-hours,
   possibly with hotel and airfare. In dollar amounts, these could easily
-  represent investments of \$10, \$100, and \$1000. The worst case, a bad hire,
-  costs potentially \$10,000 or more.
+  represent investments of \$10, \$100, and \$1000.\footnote{I've been told by
+  that in-person interviews can cost significantly upwards of \$1000, so take
+  these numbers with a grain of salt and treat them as lower bounds.} The worst
+  case, a bad hire, costs potentially \$10,000 or more.
 
   Given this, the interviewer operates as an investor of the company's
   assets.\footnote{Unlike most investors, however, their pay is constant; so
@@ -2870,6 +2976,31 @@ meta::section('the-interviewer', <<'__');
   point, the interviewer is likely to be conservative because they don't get
   paid commission; so your goal is to be so awesome that they feel safer saying
   yes than no.
+
+  - s2 Aside:~interview attire
+  {\bf The interviewer does not care what you wear to an interview.} Nobody
+  cares about this except you. Unlike in almost any other industry, a suit is
+  much more likely to be a liability than anything else. I have gotten every
+  job I've had by going to interviews in flip-flops, khakis, and a T-shirt, and
+  being very comfortable because I this is what I'm used to wearing. The
+  interview is about your mind, so give your mind the least-distracting
+  atmosphere possible so it can do its job.
+
+  It makes perfect sense if you think about the interviewer's position. If
+  you're awesome, the interviewer cannot go back to the hiring manager with an
+  assessment like, ``well, the candidate is the most productive we've ever
+  seen, but can we really put up with someone who dresses that way?''
+  ``Fashion-aware'' and ``software developer'' don't even belong in the same
+  sentence. The interviewer will probably say something like, ``the candidate
+  blew us away on the coding tests, {\em and this one even wore pants!}''
+  ``Capable {\em and} pants? Hire.''
+
+  The flip side is equally clear. If you're awkward and uncomfortable, the
+  interviewer doesn't know whether it's because you're having trouble with the
+  problems, or whether it's that you're wearing a suit to an office with a beer
+  pong table and a CEO dressed in a hoodie. The interviewer is certainly not
+  going to say, ``well, that candidate can't code his way out of paper bag but
+  man is he a sharp dresser. I'm a yes.''
 
 __
 meta::template('comment', '\'\';     # A mechanism for line or block comments.');
