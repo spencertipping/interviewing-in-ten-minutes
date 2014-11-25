@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # 99aeabc9ec7fe80b1b39f5e53dc7e49e      <- self-modifying Perl magic
-# state:  3KjLLK0/4p1oHcK34n/WqSawVqXwmiwoF/wAGaONXvw
+# state:  +mdbAYsgTXmyzd1pxj+TBuMTs2OhFgPps/aLcG0+Jjk
 # istate: Vacpq1PZ9syauT3/YVxj/CaMloEkm+3iFgh8at/4QbU
 # id:     UCdVwr+1QqTcieO7/hgq5d0RK7S9wX4N9biQ/ecDzZo
 
@@ -2954,14 +2954,8 @@ meta::section('technical-phone-interview', <<'__');
         unlikely to take you very seriously.)
       - item Your preferences about design and documentation, and why you do it
         this way.
-      - item A project you've worked on that went really well, and why this
-        happened.
-      - item A project you've worked on that was a disaster, and why. Don't try
-        to blame other people; you need one where you messed up and learned
-        something. If you don't have a project like this, think of something
-        really hard, try to solve it, push the failed results to Github, and
-        talk about why that didn't work. It's fine if failure was inevitable;
-        the main thing is to know how to translate it into improvement.
+      - item A project you've worked on, how it turned out, and how your
+        actions contributed to that outcome.
     - end
 
   - s2 Career/self literacy
