@@ -1,0 +1,1117 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,pxfonts,listings,color}
+\usepackage[colorlinks]{hyperref}
+\definecolor{gray}{rgb}{0.6,0.6,0.6}
+
+\usepackage{caption}
+\DeclareCaptionFormat{listing}{\llap{\color{gray}#1\hspace{10pt}}\tt{}#3}
+\captionsetup[lstlisting]{format=listing, singlelinecheck=false, margin=0pt, font={bf}}
+
+\lstset{columns=fixed,basicstyle={\tt},numbers=left,firstnumber=auto,basewidth=0.5em,showstringspaces=false,numberstyle={\color{gray}\scriptsize}}
+
+\newcommand{\Ref}[2]{\hyperref[#2]{#1 \ref*{#2}}}
+
+% Shamelessly swiped from
+% http://compgroups.net/comp.text.tex/using-ref-and-label-so-that-ref-points-to-the-l/245066
+\makeatletter
+\newcommand*{\Label}[2]{%
+  \@bsphack
+  \begingroup
+    \label{#1-original}%
+    \def\@currentlabel{#2}%
+    \label{#1}%
+  \endgroup
+  \@esphack
+}
+\makeatother
+
+
+\lstnewenvironment{asmcode}       {}{}
+\lstnewenvironment{cppcode}       {\lstset{language=c++}}{}
+\lstnewenvironment{javacode}      {\lstset{language=java}}{}
+\lstnewenvironment{javascriptcode}{}{}
+\lstnewenvironment{htmlcode}      {\lstset{language=html}}{}
+\lstnewenvironment{perlcode}      {\lstset{language=perl}}{}
+\lstnewenvironment{rubycode}      {\lstset{language=ruby}}{}
+\lstnewenvironment{pythoncode}    {\lstset{language=python}}{}
+
+\lstnewenvironment{resourcecode}{}{}
+
+\title{Interviewing in Ten Minutes}
+\author{Spencer Tipping}
+
+\begin{document}
+\maketitle{}
+\tableofcontents{}
+
+\section*{About this guide}
+Over the past few years I've worked for a lot of startups. (Because I
+job-hopped, not because I'm important.) For one reason or another, I ended up
+conducting technical interviews at about half of these companies. Usually we
+were looking for developers who knew some high-end functional language, so
+this guide is strongly biased by that -- though I think it also applies to
+more standard startup jobs.
+
+{\bf Everything in this guide is my own opinion.} It does not reflect the
+views of any of my employers, past or present.
+
+\section{The business protocol}\label{sec:business-protocol}
+  For various reasons, partly tradition and partly expedience, companies tend
+  to have a set of norms that dictate how people work together. From what I've
+  been able to observe, the following commandments encode the business
+  protocol:
+
+\begin{enumerate}
+\item{\bf Thou shalt respect other people's time like thine own.}
+  This is absolutely crucial. Business is about money, people convert money
+  to time, and if you waste/take an employee's time then you're wasting the
+  company's money. People holding the money to pay your salary want to see
+  a positive return on their investment in you, which is undermined if you
+  then make other people less productive. {\bf Be the person who makes
+  others more productive.}
+
+\item{\bf Thou shalt get things done.}
+  By this I mean, if someone gives you a task it will be done. They don't
+  have to think twice about it. If you hit difficulty, you'll figure it
+  out. If you can prove it's impossible, change the problem to be possible
+  and explain why you did. {\bf Be the person who gives up last.}
+
+\item{\bf Thou shalt work only when it is productive.}
+  Work $\ne$ productivity. The two are nearly orthogonal, in fact.
+  Understand what is productive at as high a level as you can, and work on
+  that stuff. Busywork is worse than doing nothing because you'll be
+  unavailable but will be getting nothing done. {\bf Be the person who does
+  everything for a reason.}
+
+\item{\bf Thou shalt simplify.}
+  This is a way to respect people's time. Every problem that comes your way
+  should be simpler after it interacts with you. Make things look easy
+  because to you they are easy. {\bf Be the person who finds the best
+  solution.}
+
+\item{\bf Thou shalt be fluent.}
+  This goes two ways:~you must communicate flawlessly both with people and
+  with computers. Functionally, a programmer is an information channel that
+  translates between human intent and computational action. You want this
+  channel to be efficient, lossless, and high-capacity. {\bf Be the best
+  conduit of intent from people to machines.}
+
+\item{\bf Thou shalt not bikeshed.}
+  Thou shalt not argue in general, in fact. But if you must, make sure it's
+  about an issue that justifies a conversation costing the company more
+  than \$100/hour (nearly every conversation is likely to cost this, and
+  some will cost far more). {\bf Be the person who cuts through the noise
+  and focuses on real problems.}
+\end{enumerate}
+
+  I'll go into more details about how to convey these things during an
+  interview later on. For now, though, understand that the above values (or
+  similar ones) serve as the conduit by which your skills can be applied to the
+  company's problems. If this conduit is missing or sufficiently damaged, your
+  skills won't matter.
+
+\section{The interviewer}\label{sec:the-interviewer}
+  Interviewers are not usually sadists. While the case could be made that the
+  job demands a certain degree of malevolence, most of the confrontation during
+  the interview is due to the economics underlying hiring.
+
+  Consider the common flow of resume screen, phone screen, and then in-person
+  interviews. There's a progression of risk/cost associated with moving forward
+  at each stage:~screening a resume requires minutes, a phone interview
+  requires an hour, and an in-person interview requires several people-hours,
+  possibly with hotel and airfare. In dollar amounts, these could easily
+  represent investments of \$10, \$100, and \$1000.\footnote{I've been told
+  that in-person interviews can cost significantly upwards of \$1000, so take
+  these numbers with a grain of salt and treat them as lower bounds.} The worst
+  case, a bad hire, costs potentially \$10,000 or more.
+
+  Given this, the interviewer operates as an investor of the company's
+  assets.\footnote{Unlike most investors, however, their pay is constant; so
+  they don't have a stake in the outcome of the interview. This creates a
+  slight negative bias, but as far as I know it shouldn't influence their
+  decisions otherwise.} Their job is to evaluate risks for the company by
+  making bets on people. Because of this, if you are an interviewee, your job
+  is to sell such a bet to the person interviewing you. Perhaps more to the
+  point, the interviewer is likely to be conservative because they don't get
+  paid commission; so your goal is to be so awesome that they feel safer saying
+  yes than no.
+
+\subsection{Aside:~interview attire}
+  {\bf The interviewer does not care what you wear to an interview.} Nobody
+  cares about this except you. Unlike in almost any other industry, a suit is
+  much more likely to be a liability than anything else. I have gotten every
+  job I've had by going to interviews in flip-flops, khakis, and a T-shirt, and
+  being very comfortable because this is what I'm used to wearing. The
+  interview is about your mind, so give your mind the least-distracting
+  atmosphere possible so it can do its job.
+
+  It makes perfect sense if you think about the interviewer's position. If
+  you're awesome, the interviewer cannot go back to the hiring manager with an
+  assessment like, ``well, the candidate is the most productive we've ever
+  seen, but can we really put up with someone who dresses that way?''
+  ``Fashion-aware'' and ``software developer'' don't even belong in the same
+  sentence. The interviewer will probably say something like, ``the candidate
+  blew us away on the coding tests, {\em and this one even wore pants!}''
+  ``Capable {\em and} pants? Hire.''
+
+  The flip side is equally clear. If you're awkward and uncomfortable, the
+  interviewer doesn't know whether it's because you're having trouble with the
+  problems, or whether it's that you're wearing a suit to an office with a beer
+  pong table and a CEO dressed in a hoodie. The interviewer is certainly not
+  going to say, ``well, that candidate can't code his way out of paper bag but
+  man is he a sharp dresser. I'm a yes.''
+
+\section{The r\'esum\'e and cover letter}\label{sec:resume}
+  At \$100, a phone screen is still fairly cheap. The stakes of a resume and
+  cover letter are not usually very high, nor is there very much signal for the
+  interviewer to work with. However, if you're about optimizing stuff (and
+  what engineer isn't?), there are a few things you can do to communicate at
+  this point:
+
+\begin{enumerate}
+\item{\TeX{} your resume. There's only upside here, and it's a nice}
+  positive signal that you know what you're doing. If you don't know
+  \TeX{}, use HTML and export as PDF. If all else fails, write one in plain
+  text and claim that minimalism is a social virtue you take seriously.
+  Don't use Word because it conveys that you have no standards. As a
+  colleague of mine once said, ``if I'm on the fence and the resume is a
+  word doc, I typically reject the candidate.'' {\bf Use a spellchecker.}
+
+\item{Keep your resume down to one page. This shows that you respect their}
+  time. {\bf Use a spellchecker.}
+
+\item{Write a purposeful but informal cover letter. Be personable,}
+  reasonably enthusiastic, and talk about how the stuff you do for fun is
+  relevant to the company's hard problems. {\bf Use a spellchecker.}
+
+\item{Link to your github profile. If you don't have one yet, create one}
+  and upload something. If you don't have anything to upload, start solving
+  Project Euler and upload that. {\bf Use a spellchecker.}
+
+\item{Put some code in your cover letter. Nothing elaborate, but just}
+  something you thought was cool, or maybe a challenge problem they have on
+  their website, or something. Do this only if it makes sense, but it's a
+  great opportunity if you can. {\bf Use a spellchecker.}
+
+\item{Link to a project you worked on that really describes who you are.}
+  {\bf Use a spellchecker.}
+\end{enumerate}
+
+  There are a few things you absolutely cannot do:
+
+\begin{enumerate}
+\item{Talk about salary in any way. It's just too early and it sends the}
+  wrong message. It would be like someone asking about your finances before
+  the first date. This is a question you ask when you're considering
+  marriage, not dinner.
+
+\item{Lie. If you're called out on it, you're done for and people will}
+  hate you. Word might get around to other companies if you're unlucky. If
+  the truth isn't good enough, fix the truth.
+
+\item{Be noticeably unprofessional. Startups aren't overwhelmingly formal}
+  places, but they're just as vulnerable to harrassment lawsuits as anyone
+  else. You do not want to give anyone reason to believe that you're going
+  to cause legal problems or alienate people.
+
+\item{Bring politics or religion to the table. These topics are emotional}
+  catalysts with no upside and enormous potential for problems. Brendan
+  Eich, the inventor of Javascript, was forced to resign as CEO of Mozilla
+  because he had made a \$1000 contribution against gay marriage six years
+  prior. If you have public political statements on a blog or elsewhere,
+  take them down.
+\end{enumerate}
+
+\section{The technical phone interview}\label{sec:technical-phone-interview}
+  At this point you have cost the company \$110 or so, and they're deciding
+  whether or not to bump that figure by a factor of 10. This is real money, so
+  the burden is on you to convince the interviewer (who may or may not be good
+  at interviewing people) that you're the best bet they'll make this year.
+  Depending on the job you're applying for, there are a few different ways to
+  do that.
+
+  In this section I'm going to assume the technical interview is just talking
+  on the phone. The next section is entirely devoted to how to handle a
+  collaborative coding interview.
+
+\subsection{Technical literacy}
+    This is an absolute must. At a minimum, you need to be able to answer
+    questions like these with little or no thought:
+
+\begin{itemize}
+\item{Write the FizzBuzz function.}
+\item{Reverse an array in place.}
+\item{Reverse a linked list in linear time.}
+\item{What is the insertion time for a binary tree?}
+\item{What is the insertion time for a hashtable (worst, average)?}
+\item{How is a priority queue implemented?}
+\item{Quicksort vs mergesort, pros/cons?}
+\item{What does $O(n^2)$ mean formally?}
+\item{What does ``atomic'' mean?}
+\item{What is memoization?}
+\item{Why do floating-point computations often use an epsilon?}
+\item{How are negative integers represented?}
+\item{Write the Fibonacci function without using recursion.}
+\item{What's the difference between the stack and the heap?}
+\item{Conceptually, what does a garbage collector do?}
+\item{Conceptually, how does virtual memory work?}
+\item{What happens under the hood when you go to {\tt google.com}?}
+\item{Why should you profile before optimizing?}
+\item{What is an example use case for a cache?}
+\item{How would you do [some simple task] in a UNIX shell?}
+\end{itemize}
+
+\subsection{Development literacy}
+    This is also important, especially if you're applying for a position that
+    requires experience. You should be able to speak intelligently about things
+    like:
+
+\begin{itemize}
+\item{The bugs you most commonly write, and habits you've developed to}
+  avoid them.
+\item{How expensive it is to fix a bug in production.}
+\item{Strengths and weaknesses of unit testing.}
+\item{The drawbacks of using powerful languages like Lisp. (You can}
+  extol their virtues too, but if that's all you do then people are
+  unlikely to take you very seriously.)
+\item{Your preferences about design and documentation, and why you do it}
+  this way.
+\item{A project you've worked on that went really well, and why this}
+  happened.
+\item{A project you've worked on that was a disaster, and why. Don't try}
+  to blame other people; you need one where you messed up and learned
+  something. If you don't have a project like this, think of something
+  really hard, try to solve it, push the failed results to Github, and
+  talk about why that didn't work. It's fine if failure was inevitable;
+  the main thing is to know how to translate it into improvement.
+\end{itemize}
+
+\subsection{Career/self literacy}
+    This is less important from a technical perspective, but it still sends a
+    signal and is worth getting right. You should have a reasonably
+    well-informed opinion about:
+
+\begin{itemize}
+\item{Your preferred development style/environment}
+\item{How you like to interact with your manager}
+\item{How autonomous you prefer to be (more is not always better)}
+\item{The types of projects you like to work on, and why}
+\item{Roles that don't suit you}
+\item{How you envision you might be useful to this company}
+\item{How you want to change over the coming months/years}
+\item{What it takes to keep you at a job}
+\item{What would make you leave a job}
+\item{What would make you leave a job and write a blog post about why}
+  you did
+\end{itemize}
+
+    This is the part where you are interviewing the company. Just because they
+    offer you a job doesn't mean you should take it. Taking the wrong job is
+    not only bad for personal growth, but will most likely lead to a minefield
+    of a resume that will hurt your future career prospects. Demonstrating
+    reliability and the ability to stick it out is important in the long run
+    for two reasons. One is that hiring is expensive, so having to replace you
+    quickly is a liability. But the other is that people who tend to job-hop
+    might be doing it because they're bad at working with people. You want to
+    eliminate this possibility in the mind of your interviewer.
+
+\section{Coding interview}\label{sec:coding-interview}
+  People tend to assume there are two outcomes for a coding interview:~succeed
+  or fail. This is not technically true, however; a third outcome is {\em
+  succeed specatularly}, which is what you should do if you have the option,
+  and here's why.
+
+  Coding challenge interviewers are usually engineers, and engineers tend to
+  like to have answers to questions so they can move on. Because of this,
+  they'll try to jump to a conclusion about you as soon as they have enough
+  signal to justify it. This conclusion is rarely final, but at least they have
+  something to work with if they don't observe anything else.
+
+  The interview question will usually fall into one of two categories, each
+  equally expedient. One is stuff like FizzBuzz, which rapidly detects certain
+  failure modes. The other is something open-ended that gives you some room to
+  be creative. Although these problems can detect failure, they're more often
+  about detecting excellence.
+
+  If at any point in the interview process someone decides you're excellent,
+  you have a much higher chance of getting an offer. Picasso was excellent and
+  his paintings are now worth millions, whereas the guy who paints imitation
+  art just like Picasso is broke. Setting a new bar instantly promotes you into
+  the class of people who can't be replaced, and this makes it much easier to
+  justify further investment in interviewing you.
+
+\subsection{Coding challenge etiquette}
+    Enjoy the coding challenge. Relish it. This is an opportunity to be asked
+    difficult, interesting questions that are designed to be solvable in less
+    than an hour. It's break from all the mundane aspects of writing production
+    code, and an opportunity to prove to yourself as well as your interviewer
+    that you can solve anything that comes your way.
+
+\begin{itemize}
+\item{Have a language you're really comfortable with. Java is not a bad}
+  choice for this because it's straightforward and everyone knows it.
+
+\item{Unless the problem is trivial, verbally sketch out your thought}
+  process. Argue against the approaches you've taken to see if they hold
+  up. Don't write any code until you know what you're doing. The goal of
+  all this is to demonstrate that your thought process is effective at
+  solving problems. Silence followed by perfection also works, but is
+  riskier.
+
+\item{Make simplifying assumptions as necessary, but be prepared to undo}
+  them later. Always mention when you're doing this.
+
+\item{If the problem is unsolvable as stated, change it minimally to}
+  make it solvable and explain why you need to do this.
+
+\item{If the problem is too vague or ill-specified to even work with,}
+  talk with the interviewer to work the problem into something you can
+  solve. Everyone loses if you walk away from the interview without
+  having done anything.
+
+\item{When writing code, use idioms that reflect a considered}
+  perspective. It should be simple, easy to maintain, well-suited to the
+  problem, and generally self-documenting. You should be able to
+  intelligently discuss every aspect of your coding style.
+
+\item{Never sweat the small stuff. Nobody cares if you know what the}
+  deletion method is called on Java's {\tt HashSet} class. Just casually
+  mention that you'd look it up.
+
+\item{Never get defensive. If you've made a mistake, fix it quickly (or}
+  think about it and discuss it) and move on. Any good interviewer will
+  understand that people make mistakes, and some will even set up
+  questions specifically designed to mislead you. This is all part of the
+  interview and it's to see how you take it when things go wrong.
+\end{itemize}
+
+\subsection{Quick-fail problems}
+    These are the easiest problems you'll get, so you need to make them look
+    easy. Some classic examples:
+
+\begin{enumerate}
+\item{Write the factorial function.}
+\item{Write FizzBuzz.}
+\item{Calculate the sum of numbers in a linked list.}
+\item{Print the last line of a file (naive solution).}
+\end{enumerate}
+
+    Coding style matters, as well as speed and whether you can write them
+    without any bugs. I'll go through some solutions of varying quality.
+
+\subsubsection{FizzBuzz}
+      Bad solutions indicate a deep lack of understanding of some sort. Any
+      competent interviewer will count a solution like this against you:
+
+\lstset{caption={examples/fizzbuzz-bad.java},name={examples/fizzbuzz-bad.java}}\begin{javacode}
+pulic int fizz_buzz() {         // "pulic" -- eh; "int" ... ????
+int count = 0;                  // count of what?; also, indent!
+while(true) {                   // forever? why?
+int count2 = count              // "count2"?
+while (count2 > 0) {            // modulus! modulus!
+count2 = count2 - 3;
+}
+int count3 = count;             // ok, this is just silly
+while (count3 > 0) {
+count3 = count3 - 5;
+}
+//check for divisibility
+if (count2 == 0){
+if ( count3 == 0) {
+System.out.println("fizzbuzz");
+}
+else                            // missing open brace, not good
+System.out.println ("fizz");
+}
+else
+if count3 == 0 {
+System.out.println("buzz")
+}
+else {
+System.out.println(count)
+}
+}
+} \end{javacode}
+
+      This, on the other hand, is a solution I would consider to be nearly
+      perfect:
+
+\lstset{caption={examples/fizzbuzz-good.java},name={examples/fizzbuzz-good.java}}\begin{javacode}
+for (int i = 1; i < 100; ++i) {
+  final boolean by3 = i % 3 == 0;
+  final boolean by5 = i % 5 == 0;
+  if (by3 && by5)
+    println("fizzbuzz");
+  else if (by5)
+    println("buzz");
+  else if (by3)
+    println("fizz");
+  else
+    println(i);
+} \end{javacode}
+
+      Some important differences:
+
+\begin{itemize}
+\item{Indentation and good style should be habit for you. Code should}
+  have meaning, not just behavior. Formatting should be absolutely
+  consistent (any random-looking inconsistency such as in the bad
+  solution above will lead your interviewer to suspect you might be
+  junior at writing code, and you really want to avoid this).
+
+\item{Know the nuances and idioms of your language. Java gives you a}
+  modulus operator, so you should use it here. Use the appropriate
+  iteration and decisional constructs.
+
+\item{Draw attention to stuff that matters. Here, most of the space is}
+  taken up by the condition structure, which is parameterized by two
+  variables calculated above. The {\tt for} loop is appropriately
+  minimal because it's a standard iteration form that uses a generic
+  variable name.
+
+\item{Write the solution to resemble the problem. Here, {\tt by3} and}
+  {\tt by5} are the two conditions we care about. This makes the {\tt
+  if} stack nearly a verbatim translation of the problem statement.
+  Because of this, it's very easy to look at the code and be confident
+  it does the right thing. These variables are short, descriptive, and
+  not generic, which causes them to draw attention without taking up
+  much space.
+
+\item{Write hints into your code (as appropriate). I like to use}
+  {\tt final} to indicate invariance, for example. This is a matter of
+  opinion, but anything you can do to make it clear that you're
+  thinking about maintainability will work in your favor.
+\end{itemize}
+
+\subsubsection{Sum of linked list}
+      This problem is nice because it has a mediocre solution:
+
+\lstset{caption={examples/sumlist-mediocre.java},name={examples/sumlist-mediocre.java}}\begin{javacode}
+interface OurList {
+  int head();
+  OurList tail();
+}
+int sum(OurList list) {
+  if (list == null)
+    return 0;
+  else
+    return list.head() + sum(list.tail());
+} \end{javacode}
+
+      This is logically correct, terse, and generally well-expressed. But it
+      has two big problems. First, it returns an {\tt int} rather than a {\tt
+      long} or {\tt double}; this is probably a mistake. Second, and more
+      importantly, it requires linear stack space and may cause an overflow.
+      Java does not optimize tail calls, but even if it did the recursive call
+      here is not in tail position. A much better solution uses iteration:
+
+\lstset{caption={examples/sumlist-good.java},name={examples/sumlist-good.java}}\begin{javacode}
+interface OurList {
+  int head();
+  OurList tail();
+}
+long sum(OurList xs) {
+  long total = 0;
+  for (; xs != null; xs = xs.tail())
+    total += xs.head();
+  return total;
+} \end{javacode}
+
+      Not only is this more reliable, but it's also quite a bit faster and
+      follows normal Java idioms more closely. It also creates some
+      opportunities to talk about some edge cases. For example, what if the
+      list is dynamically generated and very long? The iterative solution is
+      ideal here because it loses references to cells it's already processed,
+      which allows them to be garbage collected. This means we can
+      theoretically process lists of arbitrary length using constant space.
+
+      I also prefer the parameter name {\tt xs} to a word like {\tt list}. {\tt
+      xs}, which is prounced, ``exes,'' seems simpler to me than {\tt list}
+      does because it refers to a series of things called {\tt x}, and {\tt x}
+      is the most generic name for a data value. It also takes up less space,
+      which makes it easier to focus on the algorithm structure.
+
+      The {\tt for} loop is a little nonstandard, but the idiom is preserved
+      from Java's usual numeric iteration. This means that although someone
+      unaccustomed to this type of loop might be confused at first, the usual
+      intuition about {\tt for} loops would all apply:~we're moving forward
+      through a list until we hit the end, the termination check is the second
+      thing, and the increment is the third.
+
+\subsubsection{Practice problems}
+      Solutions to these are at \ref{sec:practice-problem-solutions}.
+
+\begin{enumerate}
+\item{$f(s) = \textrm{true}$ if $s$ is a palindrome. Optimal solution}
+  is constant space, linear time, 6 lines total. Should take under a
+  minute.
+\item{$f(xs) = \textrm{true}$ if $xs$ contains a geometric series.}
+  Solution is constant space, linear time, 15 lines of code. Should
+  take less than 5 minutes.
+\item{Write a function that counts the words in a string without}
+  allocating memory. Solution is linear time, 14 lines of code, and
+  should take less than 5 minutes.
+\end{enumerate}
+
+\subsection{Algorithm problems}
+    These usually have a known-best solution, but it's ok not to find it. You
+    should of course try, and brush up on all of the usual algorithm and data
+    structure stuff before a coding interview in case you get a problem like
+    this. Below I go through some example problems. It's been long enough since
+    I've seen these that I don't remember the solution.
+
+    By the way, you'll notice the almost complete absence of comments from my
+    example code. Most interview problems are simple enough that comments are
+    unnecessary. When you're practicing questions like this, write your code
+    without comments or blank lines and see how readable you can make it. It's
+    ok if you later decide to use comments, but most really good code won't
+    require them.
+
+\subsubsection{Maximum subarray}
+\begin{quote}
+\em
+Given a list of integers, find the offset and length of the subarray
+with the largest sum.
+\end{quote}
+
+\paragraph{Initial train of thought}
+        It isn't immediately obvious how to do this, so start by talking
+        through a few strategies. One option is to calculate the sum of every
+        subarray and find the maximum of those, but it seems slow. These
+        subarrays are always made from adjacent elements, though, so maybe we
+        can ask something like, ``should I expand out by one.'' In fact, since
+        we're just summing stuff, we can expand out anytime we have something
+        nonnegative and we'll get a larger, or at least not smaller, sum.
+
+        If I were to start coding now (which would be a mistake), here's what I
+        would write:
+
+\lstset{caption={examples/max-subarray1.java},name={examples/max-subarray1.java}}\begin{javacode}
+// return [offset, length]
+int[] subarray(final int[] xs) {
+  int nextUntried  = 1;
+  int maxSum       = 0;
+  int maxSumStart  = -1;
+  int maxSumLength = 0;
+  for (int i = 1; i < xs.length; i = nextUntried) {
+    maxSumStart  = -1;
+    maxSumLength = 1;
+    while (i + maxSumStart >= 0 && xs[i + maxSumStart] >= 0) {
+      --maxSumStart;
+      ++maxSumLength;
+    }
+    i += maxSumStart;
+    while (i + maxSumLength < xs.length
+           && xs[i + maxSumLength] >= 0)
+      ++maxSumLength;
+    nextUntried = i + maxSumLength + 1;
+  }
+  return new int[] {maxSumStart, maxSumLength};
+} \end{javacode}
+
+        The code is a little awkward, but it isn't terrible. The problem is
+        with my thinking:~it's obvious I don't really understand something
+        important about the problem. The right move is to continue thinking
+        about it.
+
+\paragraph{First course correction}
+        Ok, so what happens when we're expanding and hit a negative number? I
+        guess we need to look on the other side to see if there's an even
+        larger positive number. That's kind of gross, and bumps us back into
+        quadratic time; so let's think about it differently. Suppose we first
+        take a running sum of the array; then what are we looking for? Oh!
+        We're just finding the max and min of that. The numbers in between
+        those extremes collectively have the largest sum.
+
+        Writing code here is a much less serious mistake, but is still
+        suboptimal. Here's what I'd say, most likely:
+
+\lstset{caption={examples/max-subarray2.java},name={examples/max-subarray2.java}}\begin{javacode}
+int[] subarray(int[] xs) {
+  // modify xs in place (!)
+  for (int i = 0, total = 0; i < xs.length; ++i)
+    xs[i] = total += xs[i];
+
+  int max = 0;
+  int min = 0;
+  for (int i = 1; i < xs.length; ++i) {
+    if (xs[i] > xs[max]) max = i;
+    if (xs[i] < xs[min]) min = i;
+  }
+  return new int[] {Math.min(min, max),
+                    Math.max(min, max) - Math.min(min, max)};
+} \end{javacode}
+
+        This is much better, but it's wrong and still suboptimal. Let's
+        continue thinking:
+
+\paragraph{Second course correction}
+        Ok, so how do we do this in code? We could start by summing the array
+        in a loop, then check for max and min. Oh, but what if min happens
+        after max? I guess we really need the largest min/max gap where the max
+        is after the min.
+
+        Do we actually need to sum the array in a loop? We never look backwards
+        at stuff we've summed, so really we just need to go through and
+        maintain a running total. This is an optimal solution, so coding now
+        makes sense:
+
+\lstset{caption={examples/max-subarray3.java},name={examples/max-subarray3.java}}\begin{javacode}
+int[] subarray(final int[] xs) {
+  if (xs.length == 0)
+    return null;
+  int max      = 0;
+  int min      = 0;
+  int maxValue = xs[0];
+  int minValue = xs[0];
+  for (int i = 1, sum = xs[0]; i < xs.length; ++i) {
+    sum += xs[i];
+    if (sum < minValue) {
+      minValue = maxValue = sum;
+      min      = max      = i;
+    }
+    if (sum > maxValue) {
+      maxValue = sum;
+      max      = i;
+    }
+  }
+  return new int[] {min, max - min};
+} \end{javacode}
+
+        This solution feels a little more complicated than the last one, but
+        it's conceptually more straightforward (since we're not modifying
+        anything) and better-engineered. Just the fact that we're solving it in
+        constant space is a consideration that a good interviewer would
+        appreciate.
+
+\subsubsection{Parse simple math}
+\begin{quote}
+\em
+Write a function that takes a string containing a simple expression and
+returns the result. The expression will contain single-digit numbers,
+{\tt +}, and {\tt *}, and should respect precedence.
+\end{quote}
+
+      Ok, this is obviously a shunting-yard style problem. We could parse it
+      recursive-descent, but that's overkill. All operators are
+      left-associative, so we can evaluate as we go. Actually, we can just have
+      two constant levels:~the number on the left of a {\tt +} and the current
+      product. So our solution is constant-space.
+
+\lstset{caption={examples/parse-math.java},name={examples/parse-math.java}}\begin{javacode}
+double parsemath(final String expr) {
+  double left  = 0;
+  double right = 1;
+  for (int i = 0; i < expr.length(); ++i) {
+    final char c = expr.charAt(i);
+    switch (c) {
+      case '+':
+        left += right;
+        right = 1;
+        break;
+      case '*':
+        break;
+      default:
+        right *= c - '0';
+        break;
+    }
+  }
+  return left + right;
+} \end{javacode}
+
+      I had some doubts about 2/3 of the way through this. I wasn't sure it
+      would be ok to add {\tt right} to {\tt left} at the end, since it might
+      contain a stray {\tt 1} from either initialization or the {\tt +} case.
+      But after some thought I realized it would be ok since we always end
+      after seeing a digit. That digit changes the 1 into something meaningful.
+
+      In hindsight, my variable names could be better. {\tt left} and {\tt
+      right} are less descriptive than {\tt sum} and {\tt product}. Also, the
+      first time through I had forgotten parens after {\tt expr.length}. This
+      isn't terrible, but it isn't great either. In my case I was confusing
+      Java and Javascript, but an interviewer might assume I was bad at Java
+      and confusing strings and arrays.
+
+      One nice part of this solution is \verb|c - '0'|. Using the equivalent
+      \verb|c - 0x30| or \verb|c - 48| would be hostile to someone reading your
+      code, whereas \verb|c - '0'| gives someone just enough hints that it's
+      clear you're not up to anything too complicated.
+
+      Doing things like character-to-number conversion this way tells the
+      interviewer you know how characters work and have at least some knowledge
+      of ASCII. It's also reminiscent of C-style code, which will usually work
+      in your favor in today's hiring culture of very high-level languages and
+      app development (it shows perspective, assuming you can also do the
+      high-level stuff).
+
+\subsubsection{Sorted word index}
+\begin{quote}
+\em
+Build the index for a book, sorted by word. Your input is a list of
+$\langle \textrm{word}, \textrm{page} \rangle$ tuples, and the list may
+contain duplicates.
+\end{quote}
+
+      We'll need some data structures for this. I'll go ahead and write this up
+      the wrong way to illustrate some common mistakes:
+
+\lstset{caption={examples/sorted-index-bad.java},name={examples/sorted-index-bad.java}}\begin{javacode}
+List index(List tuples) {
+  HashMap resultIndex = new HashMap();
+  for (int i = 0; i < tuples.size(); ++i) {
+    if (!resultIndex.contains(tuples[i].word))
+      resultIndex.add(tuples[i].word, new LinkedList());
+    resultIndex.get(tuples[i].word).add(tuples[i].page);
+  }
+  List sortedResult = new ArrayList();
+  Iterator iterator = resultIndex.iterator();
+  while (iterator.hasNext()) {
+    Tuple indexEntry = iterator.next();
+    sortedResult.add(indexEntry);
+  }
+  quicksort(sortedResult);
+  return sortedResult;
+} \end{javacode}
+
+      This solution has a lot of problems. For one thing, none of the data
+      structures are parameterized. {\em Always parameterize your data
+      structures.} There are two reasons you want to do this. First, prior to
+      Java 1.5 (a long time ago), Java didn't even have generics. You might
+      come across as a Luddite who prefers inferior technologies.
+
+      But more importantly, writing this stuff down tells the interviewer what
+      you're thinking. A map of \verb|<Thing, Thing>| doesn't convey your
+      intentions very well; its meaning is then defined by what you do to the
+      map instead of something intrinsic to it.\footnote{Generics aren't
+      intrinsic really, but you get the idea.} Whenever possible, use code to
+      document what you're doing. Especially parameters and return types,
+      because this gives the interviewer a quick way to correct any
+      inappropriate assumptions you might be making.
+
+      Here are some other problems with the code above:
+
+\begin{enumerate}
+\item{It mixes definition types between interfaces (e.g.~{\tt List})}
+  and implementations (e.g.~{\tt HashMap}). There are very occasionally
+  reasons to do this, but this isn't one of them.
+\item{It grossly mishandles {\tt tuples}. Were {\tt tuples} a linked}
+  list, the function would be quadratic.
+\item{{\tt resultIndex} is redundant, misleading, and too long. It}
+  takes up a huge amount of space inside the {\tt for} loop.
+\item{{\tt tuples[i].word} is repeated three times in quick}
+  succession. Stash this into a short variable.
+\item{{\tt sortedResult} is too long.}
+\item{{\tt iterator} is redundant and too long. The ideal name is}
+  {\tt it}.
+\item{The {\tt while} loop spends a whole line defining a variable}
+  that's almost as long as the expression it replaces.
+\item{{\tt quicksort()} is not only dangerous performance-wise, but}
+  also not a valid Java function. No Java library function would be
+  called this way because Java requires that it be a method call
+  (unless you {\tt import static}, but your interviewer might not
+  assume you meant that).
+\end{enumerate}
+
+      The code also has some technical issues that I don't think are important
+      for an interview:
+
+\begin{enumerate}
+\item{{\tt Map}s don't support {\tt .add}; the correct method is {\tt}
+  .put}. Nobody cares. The compiler would catch this immediately. If
+  the interviewer makes a big deal about this, find a company with
+  better priorities or more competent interviewers.
+
+\item{{\tt tuples[i]} doesn't work. This is fine; you clearly want to}
+  get-by-position. The only thing the interviewer should care about
+  here is that this retrieval is linear-time for a {\tt LinkedList},
+  and you should know this cold and have a very good excuse for doing
+  it this way.
+
+\item{{\tt .size()} could be expensive, but isn't. Your interviewer}
+  may not have read the source for {\tt LinkedList}, but there's a
+  counter in there that makes {\tt .size()} a constant-time operation.
+  It's cool if you can work this into an interview, but odds are that
+  if you're counting a linked list you're already doing something
+  wrong.
+\end{enumerate}
+
+      Here's the right way, with some notational liberties that are appropriate
+      during an interview:
+
+\lstset{caption={examples/sorted-index-good.java},name={examples/sorted-index-good.java}}\begin{javacode}
+SortedMap<String, List<Integer>> index(final List<Tuple> tuples) {
+  final SortedMap<...> result = new TreeMap<>();
+  for (final Tuple t : tuples) {
+    if (result.containsKey(t.word))
+      result.get(t.word).add(t.page);
+    else
+      result.put(t.word, new ArrayList<Integer>(t.page));
+  }
+  return result;
+} \end{javacode}
+
+      \verb|SortedMap<...>| isn't allowed, but it's really obvious what I mean,
+      especially if I explain it as I'm typing. The same thing is true of
+      \verb|new ArrayList<Integer>(t.page)|, which actually is valid Java but
+      doesn't mean what I want it to (in real life it sets the initial capacity
+      of the list). In an interview I would either make a point of mentioning
+      this redefinition, or would just write out the right code.
+
+      It's worth mentioning that I'm being a little more pedantic than
+      necessary about a few things. In particular, an interviewer is unlikely
+      to care much whether you use {\tt containsKey} vs {\tt contains} and
+      stuff like that. Knowing these details adds a bit to your credibility,
+      and it's something I try to do, but it won't ever be the difference
+      between passing and failing an interview.
+
+\subsection{High-level design questions}
+    These are usually problems for which you don't write code, but instead just
+    describe how you would design a solution. Failure and success are more
+    nebulous here, but generally there are two ways to fail one of these
+    questions:
+
+\begin{enumerate}
+\item{The problem has a well-known solution and you completely miss it.}
+\item{You fail to convince the interviewer that you could actually solve}
+  the problem given enough time.
+\end{enumerate}
+
+    An example of the first failure mode would be something like, ``design a
+    data structure that lets me get the minimum and maximum elements in $O(log
+    n)$ time'' and you don't think of either a sorted list or a binary tree.
+    You might be able to recover if you invent either one, but it's better (and
+    far more reassuring to the interviewer) if you just know how they work.
+
+    The second failure mode happens either when you're completely out of your
+    depth, or when you don't adopt the ``give up or die trying'' mentality
+    thoroughly enough. If you're good at interviewing, neither should happen to
+    you, and here's why. Being out of your depth isn't a dealbreaker if you're
+    sufficiently resourceful and/or curious. If you don't have a clue, start
+    asking definitional questions until the problem makes a little more sense.
+    For example:
+
+\begin{quote}
+\em
+How many bits of entropy are in each word in English?
+
+``Can I ask a question?'' \\
+``Sure, go for it.'' \\
+``What is entropy?'' \\
+``Entropy is information content, measured as Shannon Entropy.'' \\
+``Do you mind if I look this up on Wikipedia?''
+\end{quote}
+
+    You'll probably get mixed responses to the Wikipedia question. But it's a
+    good question to ask because it shows that you know how to teach yourself
+    to solve problems you can't yet work with. If the interviewer says yes you
+    should be all set, but let's suppose they say no:
+
+\begin{quote}
+\em
+``Nope, you've got to solve this problem with no external resources.'' \\
+``Ok, I think I can solve this problem but not with just what I know. Can
+  you relate entropy to other units of measure?'' \\
+``I guess you can think of entropy as the log of probability.'' \\
+``Aha, so we're looking at words in terms of their probability
+  distribution.'' \\
+``That's right.'' \\
+``Ok, so I guess more common words are less informative because they
+  appear more often. Does this mean they have lower entropy?''
+\end{quote}
+
+    This is naive and misguided question, but it forces the interviewer to
+    either fix your thinking or be pathologically unhelpful. This is exactly
+    the situation you want to create when you're operating at a disadvantage.
+    Here's one way the conversation can proceed:
+
+\begin{quote}
+\em
+``Well, a word by itself doesn't have entropy; it's a property of the
+  probability distribution.'' \\
+``Interesting, so we don't know the information content of a single
+  word.'' \\
+``That's right, because you need to consider its context to know how
+  common it is.'' \\
+``Ok, so entropy must have something to do with how the probabilities
+  themselves are distributed.''
+\end{quote}
+
+    And so on. When the interviewer is your only source of information, it's
+    critical to keep the conversation going and maintain enough curiosity to
+    find your way around the problem space. Interviews are conversations as
+    much as they are anything else, and how you think is as important as the
+    knowledge you bring to the table.
+
+    It's worth noting that in order for this to work, you need to have a fairly
+    broad base of knowledge to tie things to. The interviewer has neither the
+    time nor inclination to teach you computer science or math from the ground
+    up, so you have to be making some intelligent connections for them to be
+    remotely confident that you'll work out.
+
+\subsubsection{IO scheduler}
+\begin{quote}
+\em
+You're writing an operating system and inventing your own IO scheduling
+strategy. How would you design it?
+\end{quote}
+
+      This is a really open-ended question, but you'll get those sometimes.
+      Here's how a good interview might go:
+
+\begin{quote}
+\em
+``Ok, so we're scheduling programs' requests to make IO?'' \\
+``That's right.'' \\
+``Ok. These programs can read and write, and let's treat each request
+  as having an offset and length from the device.'' \\
+``Yep, you can assume that.'' \\
+``I guess each program should have its own IO priority. So stuff like
+  databases can get first access when it needs to.'' \\
+``Can you see anything that might go wrong if you do it this way?'' \\
+``Well, theoretically we might swap to disk, and that's probably being
+  scheduled too. But then, maybe we just say that it's inadvisable to
+  deprioritize the swapper.'' \\
+``Fair enough.'' \\
+``Ok, so every process is going through the same scheduler. I guess the
+  question now is what to do at any given moment. Let's keep a priority
+  queue of requests.'' \\
+``How do you sort the queue?'' \\
+``Program priority.... oh, and we also need to prevent starvation I
+  guess. There's probably a standard way of dealing with this.'' \\
+``There is, but suppose you're inventing it from scratch.'' \\
+``Ok, well one way to do it is to keep track of the request times. As
+  requests get older, they get bumped up the queue even if they're
+  technically lower priority.'' \\
+``That sounds reasonable. What would that sorting function look like?''
+\\
+``I guess it would be something like $priority + k(delay)$?'' \\
+``How might that function not do what you want?'' \\
+``I'm not sure. I guess if $k$ is really small it would still allow
+  starvation. But older requests will still outweigh new ones
+  eventually.'' \\
+``Stepping back, what are some other considerations you might want to
+  make in your scheduler?'' \\
+``Let's see...~we're handling priority correctly, so I'm not sure.''
+``Ok, here's a hint. Suppose you've got two programs running at the
+  same priority. One of them is writing 10GB in 4MB chunks, and the
+  other one is writing all over the place in tiny 4KB chunks. What's
+  going to happen here?'' \\
+``Oh, that's awful. The random writer is going to introduce all kinds
+  of seek delays into the sequential one. I should have thought of
+  that.'' \\
+``Yep, exactly. What do you think is ideal behavior in this scenario?''
+\\
+``I'm not quite sure. Intuitively it seems like we should let the
+  sequential one run uninterrupted for a while, but then what if you
+  have two such processes? At that point you're balancing sequential
+  access against delays.'' \\
+``Right, it's a tradeoff between latency and throughput. Is that a
+  problem?'' \\
+``I guess it isn't; that could be a system-wide preference.'' \\
+``Right. So any ideas about the sequential process?''
+\end{quote}
+
+      And so forth. Even though the interviewer had to prompt and give hints,
+      it was mostly just to direct the conversation, not because the candidate
+      was messing stuff up. Some stuff the candidate did right:
+
+\begin{itemize}
+\item{Scoped out the problem before trying to solve it. The problem as}
+  stated actually wasn't solvable because it was underspecified, but
+  the candidate asked enough questions to get something tractable.
+
+\item{Recognized that real-world constraints applied to the problem}
+  and used them (e.g.~mentioning disk swapping). Not all problems are
+  amenable to this kind of reasoning, but this one is. An interviewer
+  will usually appreciate this kind of perspective because junior
+  developers often don't have it.
+
+\item{Pointed out that the problem was most likely solved already.}
+  This is a good thing to do because the interviewer might immediately
+  cut over to asking about established solutions. If you don't offer an
+  existing solution, an interviewer might suspect you reinvent the
+  wheel too eagerly.
+
+\item{Described the solution at the same level of detail as the}
+  interviewer constrained the problem. The candidate didn't burst into
+  code or mention direct memory access. Either of these would be
+  addressed at a different level of problem, and the candidate's job is
+  to recognize this.
+
+\item{Offered some relevant technical details. Mentioning a priority}
+  queue isn't out of place at this point because priority queues are
+  ideas, not data structures. Had the candidate mentioned using a
+  minheap, the interviewer would have had leverage to change the
+  problem description in a way that would require the candidate to back
+  out of that recommendation (maybe the sorting criterion changes over
+  time, so you'd have to re-heapify everything). This wastes time and
+  suggests that the candidate might be prematurely optimizing or
+  otherwise operating at the wrong level of abstraction.
+
+\item{Remained willing to change the solution's design. Because the}
+  problem isn't written down anywhere, it's going to change constantly
+  until the interview ends. It's important to treat it this way and not
+  commit to anything too low-level. You want to remain as agile as the
+  interviewer.
+\end{itemize}
+
+      I tried to write an example of a bad interview, but I couldn't figure out
+      how the conversation would actually go. A lot of times a bad interview is
+      just someone who gets very quiet, or who doesn't understand the
+      interviewer and doesn't then ask questions to fix it. A curious person
+      who's sufficiently out of the loop might still fail a question like this,
+      but odds of success go way up if you stay engaged.
+
+\subsection{Practice problem solutions}\label{sec:practice-problem-solutions}
+\begin{enumerate}
+\item{Return true if palindrome.}
+
+\lstset{caption={solutions/palindrome.java},name={solutions/palindrome.java}}\begin{javacode}
+boolean palindrome(final String s) {
+  for (int i = 0, j = s.length() - 1; i < j; ++i, --j)
+    if (s.charAt(i) != s.charAt(j))
+      return false;
+  return true;
+} \end{javacode}
+
+\item{Return true if geometric series.}
+
+\lstset{caption={solutions/geometric.java},name={solutions/geometric.java}}\begin{javacode}
+boolean geometric(final double[] xs) {
+  if (xs.length < 2)
+    return true;
+  if (xs[0] == 0) {
+    for (int i = 0; i < xs.length; ++i)
+      if (xs[i] != 0)
+        return false;
+    return true;
+  }
+
+  final double ratio = xs[1] / xs[0];
+  for (int i = 2; i < xs.length; ++i)
+    if (Math.abs(xs[i] / xs[i - 1] - ratio) > EPSILON)
+      return false;
+  return true;
+} \end{javacode}
+
+\item{Return the word count of a string without allocating memory.}
+
+\lstset{caption={solutions/wordcount.java},name={solutions/wordcount.java}}\begin{javacode}
+int wordcount(final String s) {
+  boolean inWord = false;
+  int     words  = 0;
+  for (int i = 0; i < s.length(); ++i) {
+    final char c = s.charAt(i);
+    if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {
+      if (!inWord)
+        ++words;
+      inWord = true;
+    } else
+      inWord = false;
+  }
+  return words;
+} \end{javacode}
+\end{enumerate}
+
+\end{document}

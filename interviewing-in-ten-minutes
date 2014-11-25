@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # 99aeabc9ec7fe80b1b39f5e53dc7e49e      <- self-modifying Perl magic
-# state:  qQA1P8WKUGwkyDUiaYe3PAyi1oBoc1ZkkAt2mDQPve0
-# istate: KLAtwC38rX1voAyfi/vG2ambKyzSDDaTNvVSlH0gIF0
+# state:  3KjLLK0/4p1oHcK34n/WqSawVqXwmiwoF/wAGaONXvw
+# istate: Vacpq1PZ9syauT3/YVxj/CaMloEkm+3iFgh8at/4QbU
 # id:     UCdVwr+1QqTcieO7/hgq5d0RK7S9wX4N9biQ/ecDzZo
 
 # This is a self-modifying Perl file. I'm sorry you're viewing the source (it's
@@ -693,7 +693,10 @@ my @parent_hashes = map $inherited{$_} || '-', @definitions if $parent_hashes;
 join "\n", map strip($_), split /\n/, table_display($external ? [grep length, @externals] : [@definitions],
                                                     $sizes ? ([@sizes]) : (), $flags ? ([@flags]) : (), $hashes ? ([@hashes]) : (), $parent_hashes ? ([@parent_hashes]) : ());
 __
-meta::function('make', 'compile_tex("--pdf=" . name() . ".pdf");');
+meta::function('make', <<'__');
+compile_tex("--pdf=" . name() . ".pdf");
+file::write('interviewing-in-ten-minutes.tex', tex());
+__
 meta::function('mv', <<'__');
 my ($from, $to) = @_;
 die "'$from' does not exist" unless exists $data{$from};
@@ -2708,7 +2711,9 @@ meta::section('coding-interview', <<'__');
 
         - item Recognized that real-world constraints applied to the problem
           and used them (e.g.~mentioning disk swapping). Not all problems are
-          amenable to this kind of reasoning, but this one is.
+          amenable to this kind of reasoning, but this one is. An interviewer
+          will usually appreciate this kind of perspective because junior
+          developers often don't have it.
 
         - item Pointed out that the problem was most likely solved already.
           This is a good thing to do because the interviewer might immediately
@@ -2721,6 +2726,16 @@ meta::section('coding-interview', <<'__');
           code or mention direct memory access. Either of these would be
           addressed at a different level of problem, and the candidate's job is
           to recognize this.
+
+        - item Offered some relevant technical details. Mentioning a priority
+          queue isn't out of place at this point because priority queues are
+          ideas, not data structures. Had the candidate mentioned using a
+          minheap, the interviewer would have had leverage to change the
+          problem description in a way that would require the candidate to back
+          out of that recommendation (maybe the sorting criterion changes over
+          time, so you'd have to re-heapify everything). This wastes time and
+          suggests that the candidate might be prematurely optimizing or
+          otherwise operating at the wrong level of abstraction.
 
         - item Remained willing to change the solution's design. Because the
           problem isn't written down anywhere, it's going to change constantly
@@ -2949,6 +2964,35 @@ meta::section('technical-phone-interview', <<'__');
         the main thing is to know how to translate it into improvement.
     - end
 
+  - s2 Career/self literacy
+    This is less important from a technical perspective, but it still sends a
+    signal and is worth getting right. You should have a reasonably
+    well-informed opinion about:
+
+    - itemize << end
+      - item Your preferred development style/environment
+      - item How you like to interact with your manager
+      - item How autonomous you prefer to be (more is not always better)
+      - item The types of projects you like to work on, and why
+      - item Roles that don't suit you
+      - item How you envision you might be useful to this company
+      - item How you want to change over the coming months/years
+      - item What it takes to keep you at a job
+      - item What would make you leave a job
+      - item What would make you leave a job and write a blog post about why
+        you did
+    - end
+
+    This is the part where you are interviewing the company. Just because they
+    offer you a job doesn't mean you should take it. Taking the wrong job is
+    not only bad for personal growth, but will most likely lead to a minefield
+    of a resume that will hurt your future career prospects. Demonstrating
+    reliability and the ability to stick it out is important in the long run
+    for two reasons. One is that hiring is expensive, so having to replace you
+    quickly is a liability. But the other is that people who tend to job-hop
+    might be doing it because they're bad at working with people. You want to
+    eliminate this possibility in the mind of your interviewer.
+
 __
 meta::section('the-interviewer', <<'__');
 - s1 The interviewer | sec:the-interviewer
@@ -2961,7 +3005,7 @@ meta::section('the-interviewer', <<'__');
   at each stage:~screening a resume requires minutes, a phone interview
   requires an hour, and an in-person interview requires several people-hours,
   possibly with hotel and airfare. In dollar amounts, these could easily
-  represent investments of \$10, \$100, and \$1000.\footnote{I've been told by
+  represent investments of \$10, \$100, and \$1000.\footnote{I've been told
   that in-person interviews can cost significantly upwards of \$1000, so take
   these numbers with a grain of salt and treat them as lower bounds.} The worst
   case, a bad hire, costs potentially \$10,000 or more.
@@ -2982,7 +3026,7 @@ meta::section('the-interviewer', <<'__');
   cares about this except you. Unlike in almost any other industry, a suit is
   much more likely to be a liability than anything else. I have gotten every
   job I've had by going to interviews in flip-flops, khakis, and a T-shirt, and
-  being very comfortable because I this is what I'm used to wearing. The
+  being very comfortable because this is what I'm used to wearing. The
   interview is about your mind, so give your mind the least-distracting
   atmosphere possible so it can do its job.
 
